@@ -402,7 +402,7 @@ Wire Wire Line
 	7400 3500 7900 3500
 Text Label 7900 3500 2    50   ~ 0
 NRST
-Text Label 2450 4650 2    50   ~ 0
+Text Label 2450 4550 2    50   ~ 0
 NRST
 $Comp
 L Connector_Generic:Conn_01x02 J5
@@ -415,12 +415,8 @@ F 3 "~" H 1600 4950 50  0001 C CNN
 	1    1600 4950
 	-1   0    0    -1  
 $EndComp
-Text Label 2450 4550 2    50   ~ 0
+Text Label 2450 4650 2    50   ~ 0
 SWDIO
-Text Label 2450 4450 2    50   ~ 0
-SWCLK
-Wire Wire Line
-	2450 4450 1800 4450
 Wire Wire Line
 	1800 4550 2450 4550
 Wire Wire Line
@@ -485,14 +481,10 @@ F 3 "~" H 1600 4550 50  0001 C CNN
 	1    1600 4550
 	-1   0    0    -1  
 $EndComp
-Text Label 2450 4750 2    50   ~ 0
-BOOT0_WAKEUP
+Text Label 4200 3400 0    50   ~ 0
+SWCLK_BOOT0_WAKEUP
 Wire Wire Line
-	2450 4750 1800 4750
-Text Label 4450 3400 0    50   ~ 0
-BOOT0_WAKEUP
-Wire Wire Line
-	4450 3400 5100 3400
+	4200 3400 5100 3400
 $Comp
 L Device:R R3
 U 1 1 5FD23182
@@ -568,13 +560,9 @@ NoConn ~ 7050 2300
 NoConn ~ 5250 3100
 NoConn ~ 5250 3200
 Wire Wire Line
-	5250 3500 4450 3500
-Wire Wire Line
 	4450 3300 5250 3300
 Text Label 4450 3300 0    50   ~ 0
 SWDIO
-Text Label 4450 3500 0    50   ~ 0
-SWCLK
 Text Label 7450 2400 2    50   ~ 0
 SD_CS
 Wire Wire Line
@@ -817,4 +805,16 @@ Wire Wire Line
 Wire Wire Line
 	2500 2350 2800 2350
 Connection ~ 2800 2350
+Wire Wire Line
+	2750 4750 1800 4750
+Text Label 2750 4750 2    50   ~ 0
+SWCLK_BOOT0_WAKEUP
+Wire Wire Line
+	2450 4450 1800 4450
+Text Label 2450 4450 2    50   ~ 0
+GPIO
+Text Label 4450 3500 0    50   ~ 0
+GPIO
+Wire Wire Line
+	4450 3500 5250 3500
 $EndSCHEMATC
