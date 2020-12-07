@@ -402,7 +402,7 @@ Wire Wire Line
 	7400 3500 7900 3500
 Text Label 7900 3500 2    50   ~ 0
 NRST
-Text Label 2450 4550 2    50   ~ 0
+Text Label 2450 4750 2    50   ~ 0
 NRST
 $Comp
 L Connector_Generic:Conn_01x02 J5
@@ -415,12 +415,12 @@ F 3 "~" H 1600 4950 50  0001 C CNN
 	1    1600 4950
 	-1   0    0    -1  
 $EndComp
-Text Label 2450 4650 2    50   ~ 0
+Text Label 2450 4550 2    50   ~ 0
 SWDIO
 Wire Wire Line
 	1800 4550 2450 4550
 Wire Wire Line
-	2450 4650 1800 4650
+	2750 4650 1800 4650
 Text Label 2150 4950 2    50   ~ 0
 TX
 Text Label 2150 5050 2    50   ~ 0
@@ -806,8 +806,8 @@ Wire Wire Line
 	2500 2350 2800 2350
 Connection ~ 2800 2350
 Wire Wire Line
-	2750 4750 1800 4750
-Text Label 2750 4750 2    50   ~ 0
+	2450 4750 1800 4750
+Text Label 2750 4650 2    50   ~ 0
 SWCLK_BOOT0_WAKEUP
 Wire Wire Line
 	2450 4450 1800 4450
