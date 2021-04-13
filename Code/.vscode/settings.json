@@ -18,7 +18,8 @@
         "ew_audio.h": "c",
         "halconf.h": "c",
         "hal_serial.h": "c",
-        "ts_audio.h": "c"
+        "ts_audio.h": "c",
+        "*.inc": "c"
     },
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true

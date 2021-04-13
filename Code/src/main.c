@@ -4,9 +4,10 @@
 #include "hal.h"
 
 #include "chprintf.h"
-#include "ts_shell.h"
+#include "shell.h"
 
 #include "ts_audio.h"
+#include "ts_sdcard.h"
 
 #include "ff.h"
 
@@ -15,13 +16,14 @@
 //===========================================================================
 
 static thread_t *shelltp = NULL;
-MMCDriver MMCD1;
+
+static event_source_t audio_dma_tc_event;
+static event_source_t audio_dma_ht_event;
 
 //===========================================================================
 // Threads and working areas
 //===========================================================================
 
-static THD_WORKING_AREA(audio_wa, 128);
 static THD_WORKING_AREA(blinker_wa, 16);
 
 static THD_FUNCTION(blinkerThd, arg) {
@@ -29,14 +31,14 @@ static THD_FUNCTION(blinkerThd, arg) {
     chRegSetThreadName("blinker");
     while (true) {
         palSetLine(LINE_LED);
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(I2SD1.state == 3 ? 250 : 500);
         palClearLine(LINE_LED);
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(I2SD1.state == 3 ? 250 : 500);
     }
 }
 
 //===========================================================================
-// Command line configuration
+// Command line / shell configuration
 //===========================================================================
 
 #define SHELL_WA_SIZE THD_WORKING_AREA_SIZE(128)
@@ -44,21 +46,13 @@ static const ShellCommand commands[] = {
     {"tree", cmd_tree},
     {"play", cmd_play},
     {"stop", cmd_stop},
+    {"state", cmd_state},
     {NULL, NULL}
 };
 
 //===========================================================================
-// Global driver configuration
+// Driver configuration and callbacks
 //===========================================================================
-
-// Maximum speed SPI configuration (18MHz, CPHA=0, CPOL=0, MSb first)
-static SPIConfig hs_spicfg = {false, NULL, GPIOB, GPIOB_SD_CS, 0, 0};
-
-// Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first)
-static SPIConfig ls_spicfg = {false, NULL, GPIOB, GPIOB_SD_CS, SPI_CR1_BR_2 | SPI_CR1_BR_1, 0};
-
-// MMC over SPI configuration
-static MMCConfig mmccfg = {&SPID2, &ls_spicfg, &hs_spicfg};
 
 // ChibiOS shell configuration
 static const ShellConfig shell_cfg = {
@@ -66,11 +60,33 @@ static const ShellConfig shell_cfg = {
     commands
 };
 
+static void i2scallback(I2SDriver *i2sp)
+{
+    chSysLockFromISR();
+    if (i2sIsBufferComplete(i2sp)) chEvtBroadcastI(&audio_dma_tc_event);
+    else chEvtBroadcastI(&audio_dma_ht_event);
+    chSysUnlockFromISR();
+}
+
+static const I2SConfig i2scfg =
+{
+    dac_buffer,
+    NULL,
+    WAV_BUFFER_SIZE,
+    i2scallback,
+    0,  // CFGR register: I2SSTD = 00 (Philips I2S), CKPOL = 0 (clk default low), DATLEN = 00 (16-bit data), CHLEN = 0 (16-bit)
+        // I2SMOD, I2SE and I2SCFG bits will be set by driver automatically
+    (1 << SPI_I2SPR_ODD_Pos) | 22  // I2S prescaler = 2 * 22 + 1 (to get from 38.4 MHz I2SCLK to 1.536 MHz BCLK)
+};
+
 //===========================================================================
 // Application entry point
 //===========================================================================
 
-int main(void) {
+int main(void)
+{
+    event_listener_t el0, el1;
+	void *pbuffer = dac_buffer;
 
     // System initialization
     halInit();
@@ -79,16 +95,39 @@ int main(void) {
     sdStart(&SD1, NULL);
     shellInit();
 
-    mmcObjectInit(&MMCD1);
-    mmcStart(&MMCD1, &mmccfg);
+    sdCardInit();
 
     // start threads
-    chThdCreateStatic(blinker_wa, sizeof(blinker_wa), NORMALPRIO - 1, blinkerThd, NULL);
+    //chThdCreateStatic(blinker_wa, sizeof(blinker_wa), NORMALPRIO - 1, blinkerThd, NULL);
     shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO, shellThread, (void *)&shell_cfg);
-    chThdCreateStatic(audio_wa, sizeof(audio_wa), NORMALPRIO + 1, audioThd, NULL);
+        
+    i2sObjectInit(&I2SD1);
+    i2sStart(&I2SD1, &i2scfg);
+
+    palSetLine(LINE_AUDIO_EN);
+
+    // register events
+    chEvtObjectInit(&audio_dma_tc_event);
+    chEvtRegister(&audio_dma_tc_event, &el0, EVT_DAC_TC);
+    chEvtObjectInit(&audio_dma_ht_event);
+    chEvtRegister(&audio_dma_ht_event, &el1, EVT_DAC_HT);
 
     while (true) {
-        chThdSleepMilliseconds(1000);
-    };  
+        eventmask_t evt = chEvtWaitAny(ALL_EVENTS);
+
+        if (evt & EVENT_MASK(EVT_DAC_TC)) {
+            // TC -> fill second half of buffer with new data
+            pbuffer += WAV_BUFFER_SIZE * sizeof(int16_t) / 2;
+            sdCardReadChunk(pbuffer);
+            palSetLine(LINE_LED);
+        }
+
+        if (evt & EVENT_MASK(EVT_DAC_HT)) {
+            // HT -> fill first half of buffer with new data
+            pbuffer = dac_buffer;
+            sdCardReadChunk(pbuffer);
+            palClearLine(LINE_LED);
+        }
+    }  
 
 }  // end of main()
