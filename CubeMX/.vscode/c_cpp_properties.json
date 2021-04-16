@@ -1,0 +1,62 @@
+{
+    "version": 4,
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "path": [
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1",
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1/arm-none-eabi",
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1/backward",
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../lib/gcc/arm-none-eabi/10.2.1/include",
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../lib/gcc/arm-none-eabi/10.2.1/include-fixed",
+                    "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include",
+                    "${workspaceRoot}/Drivers/CMSIS/Include/",
+                    "${workspaceRoot}/Drivers/CMSIS/Include/",
+                    "${workspaceRoot}/Drivers/CMSIS/Device/ST/STM32G0xx/Include/",
+                    "${workspaceRoot}/Core/Inc",
+                    "${workspaceRoot}/Core/Src",
+                    "${workspaceRoot}/Inc",
+                    "${workspaceRoot}/Src",
+                    "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Inc",
+                    "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy/",
+                    "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Src",
+                    "${workspaceRoot}/FATFS/App",
+                    "${workspaceRoot}/FATFS/Target",
+                    "${workspaceRoot}/Middlewares/Third_Party/FatFs/src"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1",
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1/arm-none-eabi",
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include/c++/10.2.1/backward",
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../lib/gcc/arm-none-eabi/10.2.1/include",
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../lib/gcc/arm-none-eabi/10.2.1/include-fixed",
+                "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\bin\\../arm-none-eabi/include",
+                "${workspaceRoot}/Drivers/CMSIS/Include/",
+                "${workspaceRoot}/Drivers/CMSIS/Include/",
+                "${workspaceRoot}/Drivers/CMSIS/Device/ST/STM32G0xx/Include/",
+                "${workspaceRoot}/Core/Inc",
+                "${workspaceRoot}/Core/Src",
+                "${workspaceRoot}/Inc",
+                "${workspaceRoot}/Src",
+                "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Inc",
+                "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy/",
+                "${workspaceRoot}/Drivers/STM32G0xx_HAL_Driver/Src",
+                "${workspaceRoot}/FATFS/App",
+                "${workspaceRoot}/FATFS/Target",
+                "${workspaceRoot}/Middlewares/Third_Party/FatFs/src"
+            ],
+            "name": "ARM",
+            "intelliSenseMode": "linux-gcc-arm",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "compilerPath": "c:\\\\program files (x86)\\\\gnu arm embedded toolchain\\\\10 2020-q4-major\\\\bin\\\\arm-none-eabi-gcc.exe",
+            "defines": [
+                "USE_HAL_DRIVER",
+                "STM32G031xx"
+            ]
+        }
+    ]
+}

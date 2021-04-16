@@ -157,7 +157,7 @@
 #define STM32_I2S_SPI1_RX_DMA_STREAM        STM32_DMA_STREAM_ID_ANY
 #define STM32_I2S_SPI1_TX_DMA_STREAM        STM32_DMA_STREAM_ID_ANY
 #define STM32_I2S_DMA_ERROR_HOOK(i2sp)      osalSysHalt("DMA failure")
-#define STM32_I2S_SPI1_MODE                 (STM32_I2S_MODE_MASTER | STM32_I2S_MODE_TX)
+#define STM32_I2S_SPI1_MODE                 STM32_I2S_MODE_MASTER | STM32_I2S_MODE_TX
 
 /*
  * ICU driver system settings.

@@ -1,0 +1,30 @@
+{
+    "files.associations": {
+        "stm32_gpio.h": "c",
+        "ff.h": "c",
+        "ch.h": "c",
+        "hal.h": "c",
+        "cstdlib": "c",
+        "stdlib.h": "c",
+        "usbcfg.h": "c",
+        "statemachine.h": "c",
+        "time.h": "c",
+        "ew_time.h": "c",
+        "string.h": "c",
+        "shell.h": "c",
+        "ew_shell.h": "c",
+        "chport.h": "c",
+        "chcore.h": "c",
+        "ew_audio.h": "c",
+        "halconf.h": "c",
+        "hal_serial.h": "c",
+        "ts_audio.h": "c",
+        "*.inc": "c",
+        "app_fatfs.h": "c",
+        "usart.h": "c",
+        "main.h": "c",
+        "stdarg.h": "c"
+    },
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
+}

@@ -126,5 +126,9 @@ void cmd_stop(BaseSequentialStream *chp, int argc, char *argv[])
 
 void cmd_state(BaseSequentialStream *chp, int argc, char *argv[])
 {
-    chprintf(chp, "I2S state: %i\r\n", I2SD1.state);
+    chprintf(chp, "I2S state: %i\r\n", I2SD1.state);    
+    chprintf(chp, "I2SCFGR: 0x%04x\r\n", SPI1->I2SCFGR);
+    chprintf(chp, "SR: 0x%04x\r\n", SPI1->SR);
+    chprintf(chp, "CR1: 0x%04x\r\n", SPI1->CR1);
+    chprintf(chp, "CR2: 0x%04x\r\n", SPI1->CR2);
 }

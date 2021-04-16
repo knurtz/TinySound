@@ -76,7 +76,7 @@ static const I2SConfig i2scfg =
     i2scallback,
     0,  // CFGR register: I2SSTD = 00 (Philips I2S), CKPOL = 0 (clk default low), DATLEN = 00 (16-bit data), CHLEN = 0 (16-bit)
         // I2SMOD, I2SE and I2SCFG bits will be set by driver automatically
-    (1 << SPI_I2SPR_ODD_Pos) | 22  // I2S prescaler = 2 * 22 + 1 (to get from 38.4 MHz I2SCLK to 1.536 MHz BCLK)
+    SPI_I2SPR_ODD_Msk | 12  // I2S prescaler
 };
 
 //===========================================================================
@@ -92,18 +92,16 @@ int main(void)
     halInit();
     chSysInit();
 
+    //chThdCreateStatic(blinker_wa, sizeof(blinker_wa), NORMALPRIO - 1, blinkerThd, NULL);
+
     sdStart(&SD1, NULL);
     shellInit();
+    shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO, shellThread, (void *)&shell_cfg);
 
     sdCardInit();
-
-    // start threads
-    //chThdCreateStatic(blinker_wa, sizeof(blinker_wa), NORMALPRIO - 1, blinkerThd, NULL);
-    shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO, shellThread, (void *)&shell_cfg);
         
     i2sObjectInit(&I2SD1);
     i2sStart(&I2SD1, &i2scfg);
-
     palSetLine(LINE_AUDIO_EN);
 
     // register events
