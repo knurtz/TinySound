@@ -98,6 +98,9 @@ int main(void)
     Error_Handler();
   }
   /* USER CODE BEGIN 2 */
+
+  
+  
   Shell_Init();
   /* USER CODE END 2 */
 

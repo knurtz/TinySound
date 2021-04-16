@@ -1,4 +1,6 @@
 #include "shell.h"
+#include "sdcard.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h> //for va_list var arg functions
@@ -22,13 +24,15 @@ uint8_t Shell_CheckCommand(void)
 
 void Shell_ExecuteCommand(void)
 {
+  if (strlen(rec_buffer) == 0) return;
+  
   if (!strcmp(rec_buffer, "help"))
   {
-    xprintf("List of commands:\n files - Show files on SD card\n help - List all commands.\n");
+    xprintf("List of commands:\n test - Test SD card\n help - List all commands.\n");
   }
-  else if (!strcmp(rec_buffer, "files"))
+  else if (!strcmp(rec_buffer, "test"))
   {
-    xprintf("Not implemented yet.\n");
+    SDCard_Test();
   }
   else xprintf("Unknown command.\n");
 }

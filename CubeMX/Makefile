@@ -72,7 +72,9 @@ Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/syscall.c \
-Core/Src/shell.c
+Core/Src/shell.c \
+Core/Src/sdcard.c \
+FATFS/Target/user_diskio_spi.c
 
 # ASM sources
 ASM_SOURCES =  \
