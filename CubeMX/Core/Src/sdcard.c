@@ -8,8 +8,11 @@ FATFS FatFs;
 void SDCard_Start(void)
 {
   if (fs_ready) return;
-
-  HAL_Delay(1000);
+  
+  // clear previously mounted filesystem
+  f_mount(NULL, "", 0);
+  
+  HAL_Delay(100);
 
   FRESULT fres = f_mount(&FatFs, "", 1);
   if (fres != FR_OK) {
@@ -27,8 +30,6 @@ void SDCard_Stop(void)
 
 void SDCard_Test(void)
 {
-  xprintf("\n~ SD card demo by kiwih ~\n\n");
-
   SDCard_Start();
 
   FRESULT fres;
@@ -45,5 +46,25 @@ void SDCard_Test(void)
   total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
   free_sectors = free_clusters * getFreeFs->csize;
 
-  xprintf("SD card stats:\n%10lu KiB total drive space.\n%10lu KiB available.\n", total_sectors / 2, free_sectors / 2);
+  int totalMB = total_sectors * 512 / 1000000.0;
+  int freeMB = free_sectors * 512 / 1000000.0;
+
+  xprintf("SD card stats:\n%i MB total drive space.\n%i MB available.\n", totalMB, freeMB);
+}
+
+void SDCard_List(void)
+{
+  DIR dir;
+  FILINFO fileinfo;
+
+  SDCard_Start();
+
+  f_opendir(&dir, "/");
+
+  f_readdir(&dir, &fileinfo);
+  while (fileinfo.fname[0])
+  {
+    xprintf("%s\n", fileinfo.fname);
+    f_readdir(&dir, &fileinfo);
+  }
 }

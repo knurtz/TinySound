@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdarg.h> //for va_list var arg functions
 
-char rec_buffer[20];
+char rec_buffer[50];
 
 // check receive buffer for newline, indicating the end of a command
 uint8_t Shell_CheckCommand(void)
@@ -29,25 +29,37 @@ void Shell_ExecuteCommand(void)
   
   if (!strcmp(rec_buffer, "help"))
   {
-    xprintf("List of commands:\n play - Play audio\n stop - Stop playback\n test - Test SD card\n help - List all commands.\n");
+    xprintf("List of commands:\n play [file] - Play audio\n stop - Stop playback\n");
+    xprintf(" test - Test SD card\n list - List all files\n");
+    xprintf(" help - List all commands.\n");
   }
+
   else if (!strcmp(rec_buffer, "test"))
   {
     SDCard_Test();
   }
+
+  else if (!strcmp(rec_buffer, "list"))
+  {
+    SDCard_List();
+  }
+
   else if (strstr(rec_buffer, "play "))
   {
     if (strlen(rec_buffer) > 5)
     cmd_play(rec_buffer + 5);
   }
+
   else if (!strcmp(rec_buffer, "stop"))
   {
     cmd_stop();
   }
+
   else if (!strcmp(rec_buffer, "cr1"))
   {
     xprintf("SPI2 CR1: 0x%04x\n", SPI2->CR1);
   }
+
   else xprintf("Unknown command.\n");
 }
 

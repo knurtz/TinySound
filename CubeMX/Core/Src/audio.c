@@ -22,12 +22,16 @@ void Audio_ReadChunk(void* pbuffer)
 {
     UINT btr = 0;
 
-    f_read(&file, pbuffer, WAV_BUFFER_SIZE * sizeof(int16_t) / 2, &btr);
+    FRESULT fres = f_read(&file, pbuffer, WAV_BUFFER_SIZE * sizeof(int16_t) / 2, &btr);
     bytes_to_play -= btr;
-
+    
     // stop playing when there are not enough bytes left to play
     // TODO: read all bytes that are left and start from beginning of file
-    if (bytes_to_play < WAV_BUFFER_SIZE * sizeof(int16_t) / 2) Audio_StopPlayback();
+    if ( (bytes_to_play < WAV_BUFFER_SIZE * sizeof(int16_t) / 2) || fres) Audio_StopPlayback();
+    if (fres) 
+    {
+      fs_ready = false;
+    }
 }
 
 void Audio_PlayFile(char* filename)
@@ -58,10 +62,10 @@ void Audio_PlayFile(char* filename)
             return;
     }
 
-    xprintf("Channels: %d\nSample Rate: %ld\nBits per Sample: %d\n",
+    /*xprintf("Channels: %d\nSample Rate: %ld\nBits per Sample: %d\n",
 		header->wave.numChannels, 
         header->wave.sampleRate, 
-        header->wave.bitsPerSample);
+        header->wave.bitsPerSample);*/
 
     if (header->wave.numChannels != 2) {
         xprintf("Wrong number of channels.\n");
@@ -98,7 +102,7 @@ void Audio_PlayFile(char* filename)
     fres = f_read(&file, &dac_buffer, WAV_BUFFER_SIZE * sizeof(int16_t), &btr);
     bytes_to_play -= btr;
 
-    xprintf("Number of bytes: %i", bytes_to_play);
+    //xprintf("Number of bytes: %i", bytes_to_play);
 
     // start continuous transfer of audio data
     HAL_GPIO_WritePin(AU_EN_GPIO_Port, AU_EN_Pin, GPIO_PIN_SET);
@@ -169,5 +173,5 @@ void cmd_play(char* arg)
 void cmd_stop(void)
 {
   Audio_StopPlayback();
-  xprintf("Missed HTs: %i\n", missed_hts);
+  //xprintf("Missed HTs: %i\n", missed_hts);
 }
