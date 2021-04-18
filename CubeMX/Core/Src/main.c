@@ -29,6 +29,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "shell.h"
+#include "audio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,8 +99,6 @@ int main(void)
     Error_Handler();
   }
   /* USER CODE BEGIN 2 */
-
-  
   
   Shell_Init();
   /* USER CODE END 2 */
@@ -112,6 +111,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     Shell_CheckCommand();
+    Audio_CheckEvents();
   }
   /* USER CODE END 3 */
 }

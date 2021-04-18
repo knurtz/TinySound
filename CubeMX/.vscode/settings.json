@@ -23,7 +23,17 @@
         "app_fatfs.h": "c",
         "usart.h": "c",
         "main.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "sdcard.h": "c",
+        "wave.h": "c",
+        "i2s.h": "c",
+        "audio.h": "c",
+        "user_diskio_spi.h": "c",
+        "ff_gen_drv.h": "c",
+        "diskio.h": "c",
+        "integer.h": "c",
+        "stm32g0xx_hal.h": "c",
+        "stm32g0xx_hal_conf.h": "c"
     },
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true

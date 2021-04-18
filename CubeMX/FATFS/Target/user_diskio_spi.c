@@ -35,8 +35,8 @@ extern SPI_HandleTypeDef SD_SPI_HANDLE;
 /* Function prototypes */
 
 //(Note that the _256 is used as a mask to clear the prescalar bits as it provides binary 111 in the correct position)
-#define FCLK_SLOW() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_128); }	/* Set SCLK = slow, approx 280 KBits/s*/
-#define FCLK_FAST() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_2); }	/* Set SCLK = fast, approx 18 MBits/s */
+#define FCLK_SLOW() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_128); }	/* Set SCLK = slow, 250 KBits/s*/
+#define FCLK_FAST() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_2); }	/* Set SCLK = fast, 16 MBits/s */
 
 #define CS_HIGH()	{HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);}
 #define CS_LOW()	{HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);}
@@ -86,6 +86,9 @@ BYTE CardType;			/* Card type flags */
 uint32_t spiTimerTickStart;
 uint32_t spiTimerTickDelay;
 
+static volatile
+uint8_t rx_ready = true;		// set to false after starting a receive action, gets reset to true in dma complete interrupt
+
 void SPI_Timer_On(uint32_t waitTicks) {
     spiTimerTickStart = HAL_GetTick();
     spiTimerTickDelay = waitTicks;
@@ -94,6 +97,16 @@ void SPI_Timer_On(uint32_t waitTicks) {
 uint8_t SPI_Timer_Status() {
     return ((HAL_GetTick() - spiTimerTickStart) < spiTimerTickDelay);
 }
+
+/*-----------------------------------------------------------------------*/
+/* DMA Callbacks                                                         */
+/*-----------------------------------------------------------------------*/
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	rx_ready = true;
+}
+
 
 /*-----------------------------------------------------------------------*/
 /* SPI controls (Platform dependent)                                     */
@@ -118,9 +131,13 @@ void rcvr_spi_multi (
 	UINT btr		/* Number of bytes to receive (even number) */
 )
 {
-	for(UINT i=0; i<btr; i++) {
+	/*for(UINT i=0; i<btr; i++) {
 		*(buff+i) = xchg_spi(0xFF);
-	}
+	}*/
+	uint8_t tx_byte = 0xFF;	
+	HAL_SPI_TransmitReceive_DMA(&SD_SPI_HANDLE, &tx_byte, buff, btr);
+	rx_ready = false;
+	while(!rx_ready);
 }
 
 

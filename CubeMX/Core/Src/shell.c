@@ -1,5 +1,6 @@
 #include "shell.h"
 #include "sdcard.h"
+#include "audio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -28,11 +29,24 @@ void Shell_ExecuteCommand(void)
   
   if (!strcmp(rec_buffer, "help"))
   {
-    xprintf("List of commands:\n test - Test SD card\n help - List all commands.\n");
+    xprintf("List of commands:\n play - Play audio\n stop - Stop playback\n test - Test SD card\n help - List all commands.\n");
   }
   else if (!strcmp(rec_buffer, "test"))
   {
     SDCard_Test();
+  }
+  else if (strstr(rec_buffer, "play "))
+  {
+    if (strlen(rec_buffer) > 5)
+    cmd_play(rec_buffer + 5);
+  }
+  else if (!strcmp(rec_buffer, "stop"))
+  {
+    cmd_stop();
+  }
+  else if (!strcmp(rec_buffer, "cr1"))
+  {
+    xprintf("SPI2 CR1: 0x%04x\n", SPI2->CR1);
   }
   else xprintf("Unknown command.\n");
 }
@@ -50,10 +64,10 @@ void Shell_ClearInputBuffer(void)
   HAL_UART_Receive_DMA(&huart1, (uint8_t*)rec_buffer, sizeof(rec_buffer));
 }
 
-// Works like normal printf, max. length 100 characters
+// Works like normal printf, max. length 150 characters
 void xprintf(const char *fmt, ...)
 {
-  static char buffer[101];
+  static char buffer[151];
   va_list args;
   va_start(args, fmt);
   vsnprintf(buffer, sizeof(buffer), fmt, args);

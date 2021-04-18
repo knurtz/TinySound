@@ -68,6 +68,8 @@ void Error_Handler(void);
 #define SD_DET_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 #define SD_SPI_HANDLE hspi2
+#define false 0
+#define true  1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
